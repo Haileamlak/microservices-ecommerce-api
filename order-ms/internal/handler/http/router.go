@@ -21,7 +21,7 @@ func SetupRouter(r *chi.Mux, orderHandler *OrderHandler, authMiddleware func(htt
 			r.Post("/", orderHandler.CreateOrder)
 			r.Get("/{id}", orderHandler.GetOrderById)
 			r.Get("/user/{userId}", orderHandler.GetOrdersByUserId)
-			r.Put("/{id}", orderHandler.UpdateOrderStatus)
+			r.Put("/{id}/status", orderHandler.UpdateOrderStatus)
 			r.Delete("/{id}", orderHandler.DeleteOrder)
 		})
 	})
