@@ -1,0 +1,238 @@
+definitions:
+  domain.Order:
+    properties:
+      createdAt:
+        type: string
+      id:
+        type: string
+      productID:
+        type: string
+      status:
+        description: pending, confirmed, shipped, delivered, cancelled
+        type: string
+      totalPrice:
+        format: float64
+        type: number
+      updatedAt:
+        type: string
+      userID:
+        type: string
+    type: object
+  dto.CreateOrderRequest:
+    properties:
+      product_id:
+        type: string
+      total_price:
+        type: number
+      user_id:
+        type: string
+    required:
+    - product_id
+    - total_price
+    - user_id
+    type: object
+  dto.UpdateOrderRequest:
+    properties:
+      id:
+        type: string
+      status:
+        enum:
+        - pending
+        - confirmed
+        - shipped
+        - delivered
+        - cancelled
+        type: string
+    required:
+    - id
+    - status
+    type: object
+info:
+  contact: {}
+paths:
+  /orders:
+    post:
+      consumes:
+      - application/json
+      description: Create an order for a user
+      parameters:
+      - description: Order
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateOrderRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Create an order
+  /orders/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete an order
+      parameters:
+      - description: Order ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Delete an order
+    get:
+      consumes:
+      - application/json
+      description: Get an order by ID
+      parameters:
+      - description: Order ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Order'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Get an order by ID
+  /orders/{id}/status:
+    put:
+      consumes:
+      - application/json
+      description: Update an order status
+      parameters:
+      - description: Order ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Status
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UpdateOrderRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Update an order status
+  /orders/user/{userId}:
+    get:
+      consumes:
+      - application/json
+      description: Get orders by user ID
+      parameters:
+      - description: User ID
+        in: path
+        name: userId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/domain.Order'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Get orders by user ID
+securityDefinitions:
+  BearerAuth:
+    description: 'Type: Bearer token. Example: "Bearer {token}"'
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
