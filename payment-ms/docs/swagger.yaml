@@ -1,0 +1,98 @@
+definitions:
+  dto.InitiatePaymentRequest:
+    properties:
+      amount:
+        type: number
+      currency:
+        enum:
+        - usd
+        - eur
+        type: string
+      order_id:
+        type: string
+    required:
+    - amount
+    - currency
+    - order_id
+    type: object
+info:
+  contact: {}
+paths:
+  /initiate-payment:
+    post:
+      consumes:
+      - application/json
+      description: Initiate a payment for an order
+      parameters:
+      - description: Payment request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.InitiatePaymentRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Initiate a payment
+  /webhook:
+    post:
+      consumes:
+      - application/json
+      description: Handle a webhook from Stripe
+      parameters:
+      - description: Stripe event
+        in: body
+        name: event
+        required: true
+        schema:
+          additionalProperties: true
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Handle a webhook
+securityDefinitions:
+  BearerAuth:
+    description: 'Type: Bearer token. Example: "Bearer {token}"'
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
