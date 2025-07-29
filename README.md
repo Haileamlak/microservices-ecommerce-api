@@ -8,8 +8,19 @@ A minimal, production-ready eCommerce backend built with Golang, gRPC, HTTP, Mon
 |---------------|--------------------------------------------|---------------------|
 | `product-ms`  | Handles product CRUD and catalog queries   | HTTP, gRPC          |
 | `order-ms`    | Manages orders and interacts with payment  | HTTP, gRPC          |
-| `payment-ms`  | Handles payments via Stripe                | HTTP, gRPC          |
+| `payment-ms`  | Handles payments via Stripe                | HTTP only          |
 | `user-ms`     | Manages user authentication and sessions   | HTTP, gRPC          |
+
+***All services interact with user-ms for authentication and authorization.***
+
+## Tech Stack
+
+* Language: **Go**
+* DB: **MongoDB**
+* APIs: **HTTP + gRPC**
+* Architecture: **Hexagonal (Clean)**
+* Auth: **JWT**
+* Payment: **Stripe**
 
 ---
 
@@ -54,7 +65,6 @@ ecommerce/
 - MongoDB (local or Atlas)
 - [Stripe Developer Account](https://dashboard.stripe.com/register)
 - `protoc` (Protocol Buffer Compiler)
-- `buf` (optional, for better protobuf management)
 
 ### Clone and Install
 
@@ -62,6 +72,7 @@ ecommerce/
 git clone https://github.com/haileamlak/ecommerce-with-microservices.git
 cd ecommerce-with-microservices/{service-name}
 go mod tidy
+go run cmd/main.go
 ````
 
 ---
@@ -127,17 +138,6 @@ All Services Have Swagger Documentation
 
 * Set your Stripe secret key in `.env` or as an environment variable.
 * Payments are created from `payment-ms` and verified through webhooks or polling.
-
----
-
-## Tech Stack
-
-* Language: **Go**
-* DB: **MongoDB**
-* APIs: **HTTP + gRPC**
-* Architecture: **Hexagonal (Clean)**
-* Auth: **JWT**
-* Payment: **Stripe**
 
 ---
 
