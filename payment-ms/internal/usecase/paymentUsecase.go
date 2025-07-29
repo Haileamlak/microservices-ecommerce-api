@@ -24,13 +24,9 @@ func NewPaymentUseCase(repo domain.PaymentRepository, paymentService *infrastruc
 func (uc *paymentUseCase) StartPayment(orderID string, amount float64, currency string) (string, *domain.AppError) {
 
 	order, err := uc.orderClient.GetOrder(context.Background(), &orderpb.GetOrderRequest{Id: orderID})
-	// check if order doesn't exist
-	if order.Order == nil {
-		return "", domain.BadRequestErr("Order not found")
-	}
 
 	if err != nil {
-		return "", domain.InternalErr("Failed to get order")
+		return "", domain.InternalErr("either order not found or error in getting order")
 	}
 
 	if order.Order.Status != "pending" {
