@@ -20,7 +20,7 @@ func NewOrderUsecase(r domain.OrderRepository, productServiceClient pb.ProductSe
 func (uc *orderUsecase) CreateOrder(o *domain.Order) (string, *domain.AppError) {
 	o.CreatedAt = time.Now()
 	o.UpdatedAt = time.Now()
-
+	o.Status = "pending"
 	o.ID = pkg.GenerateID()
 
 	product, err := uc.productServiceClient.GetProductByID(context.Background(), &pb.GetProductByIDRequest{Id: o.ProductID})
